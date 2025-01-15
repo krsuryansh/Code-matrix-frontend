@@ -8,6 +8,7 @@ function Signup() {
   const [errors, setErrors] = useState('');
   
   const [formData, setFormData] = useState({
+    username: '', // Add username to state
     name: '',
     email: '',
     password: ''
@@ -49,7 +50,7 @@ function Signup() {
     e.preventDefault();
 
     // Form validation: check if all fields are filled
-    if (!formData.name || !formData.email || !formData.password) {
+    if (!formData.username || !formData.name || !formData.email || !formData.password) {
       setErrors('Please fill in all fields.');
       return;
     }
@@ -57,7 +58,7 @@ function Signup() {
     try {
       const response = await axios.post('http://localhost:3000/submit-form', formData);
       setSuccessMessage(response.data.message);
-      setFormData({ name: '', email: '', password: '' });
+      setFormData({ username: '', name: '', email: '', password: '' });
     } catch (error) {
       setErrors(error.message);
       setSuccessMessage(`Error submitting form. Please try again. ${error.message}`);
@@ -95,6 +96,14 @@ function Signup() {
               <a href="#" className="signup-social"><i className="fab fa-linkedin-in"></i></a>
             </div>
             <span>or use your email for registration</span>
+            <input
+              type="text"
+              name="username"
+              placeholder="Username" // Username field added here
+              value={formData.username}
+              onChange={handleInputChange}
+              className="signup-input"
+            />
             <input
               type="text"
               name="name"
@@ -172,8 +181,6 @@ function Signup() {
           </div>
         </div>
       </div>
-
-     
     </>
   );
 }
