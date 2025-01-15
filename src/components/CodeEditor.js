@@ -12,7 +12,7 @@ const CodeEditor = () => {
   };
 
   const [code, setCode] = useState("// Write your code here...");
-
+  const [output, setOutput] = useState("Your output here... "); 
   // Dynamically load suggestions based on the selected language
   const handleEditorDidMount = (editor, monaco) => {
     // Register completion items based on the selected language
@@ -134,45 +134,59 @@ const CodeEditor = () => {
 
   return (
     <div className="outer-container">
-      <div className="editor-header">
-        <form>
-          <select
-            className="dropdown"
-            id="dropdown"
-            value={codingLanguage}
-            onChange={handleChange}
-          >
-            <option value="c">C</option>
-            <option value="cpp">C++</option>
-            <option value="java">Java</option>
-            <option value="javascript">JavaScript</option>
-          </select>
-
-          {/* Run Button */}
-          <button className="run-button" onClick={handleRunCode}>
-            Run
-          </button>
-        </form>
+      <div className="blank-container">
+        <h2>Blank Section</h2>
+        <p>chattt</p>
       </div>
 
-      <div className="editor-box">
-        <Editor
-          height="70vh"
-          defaultLanguage={codingLanguage}
-          value={code}
-          theme="vs-dark"
-          options={{
-            fontSize: 20,
-            lineHeight: 24,
-            minimap: { enabled: false },
-            suggestOnTriggerCharacters: true,
-            parameterHints: true,
-          }}
-          onMount={handleEditorDidMount} // Attach the onMount callback
-        />
+      {/*Editor Container*/}
+
+      <div className="editor-container">
+        <div className="editor-header">
+          <form>
+            <select
+              className="dropdown"
+              id="dropdown"
+              value={codingLanguage}
+              onChange={handleChange}
+            >
+              <option value="c">C</option>
+              <option value="cpp">C++</option>
+              <option value="java">Java</option>
+              <option value="javascript">JavaScript</option>
+            </select>
+
+            {/* Run Button */}
+            <button className="run-button" onClick={handleRunCode}>
+              Run
+            </button>
+          </form>
+        </div>
+
+        <div className="editor-box">
+          <Editor
+            height="70vh"
+            defaultLanguage={codingLanguage}
+            value={code}
+            theme="vs-dark"
+            options={{
+              fontSize: 20,
+              lineHeight: 24,
+              minimap: { enabled: false },
+              suggestOnTriggerCharacters: true,
+              parameterHints: true,
+            }}
+            onMount={handleEditorDidMount} // Attach the onMount callback
+          />
+        </div>
       </div>
-    </div>
-  );
+
+      <div className="output-panel">
+        <h2>Output</h2>
+        <pre>{output}</pre> {/* Display the output here */}
+      </div>
+      </div>
+    );
 };
 
 export default CodeEditor;
