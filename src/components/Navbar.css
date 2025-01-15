@@ -1,0 +1,134 @@
+/* General Styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .navbar {
+    background-color: rgb(21, 18, 18);
+    padding: 13px;
+    position: sticky;
+    top: 0px;
+    z-index: 990; 
+    box-shadow: 0 4px 10px rgba(42, 66, 42, 0.6); 
+
+  }
+  
+  .navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo-container {
+    display: flex;
+    align-items: center;  /* Aligns the logo and text vertically */
+  }
+  
+  .logo {
+    text-transform: uppercase;
+    text-decoration: none;
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    margin-left: 20px;  /* Adjusts the spacing between the logo image and text */
+  }
+  .logo-link{
+    text-decoration: none;
+  }
+  
+  /* Circular Logo Styles for Image */
+  .proj-logo {
+    width: 60px;  /* Set the width of the circle */
+    height: 60px; /* Set the height of the circle */
+    border-radius: 50%;  /* Makes it circular */
+    object-fit: cover;   /* Ensures the image fits inside the circle without distortion */
+    display: inline-block;  /* Ensures the image is inline with the text */
+  }
+  
+  /* Menu Styles */
+  .menu-items {
+    display: flex;
+    gap: 16px;
+  }
+  
+  .menu-link {
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    transition: background-color  ease;
+  }
+  
+  .menu-link:hover {
+    background-color: #218838;
+    border-radius: 25px;
+  }
+  /* Authentication Buttons (Register, Sign In) */
+.auth-buttons {
+    display: flex;
+    gap: 16px;
+  }
+  
+  .auth-button {
+    padding: 8px 16px;
+    font-size: 16px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .register-btn {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .register-btn:hover {
+    background-color: #218838;
+  }
+  
+  .signin-btn {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .signin-btn:hover {
+    background-color: #0056b3;
+  }
+  
+  .hamburger {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+  }
+
+  .mat{
+    color: #28a745;
+  }
+  
+  /* Media Query for Mobile (Screen Width < 768px) */
+  @media (max-width: 768px) {
+    .menu-items {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+    }
+  
+    .menu-items.active {
+      display: flex;
+    }
+  
+    .hamburger {
+      display: block;
+    }
+  
+    .menu-link {
+      padding: 12px;
+      text-align: center;
+      width: 100%;
+    }
+  }
+  

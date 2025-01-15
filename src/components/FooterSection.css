@@ -1,0 +1,106 @@
+.footer {
+    background-color: rgb(24 24 27);
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+  }
+  
+  .footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .footer-logo-section {
+    flex: 1;
+    text-align: left;
+  }
+  
+  .footer-logo {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    object-fit: cover;
+  }
+  
+  .footer-title {
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+  }
+  
+  .footer-links {
+    flex: 1;
+    text-align: left;
+  }
+  
+  .footer-links h4 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: lightgreen;
+  }
+  
+  .footer-links ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-links li {
+    margin-bottom: 8px;
+  }
+  
+  .footer-links a {
+    text-decoration: none;
+    color: white;
+    transition: color 0.3s;
+  }
+  
+  .footer-links a:hover {
+    color: lightgreen;
+  }
+  
+  .footer-contact {
+    flex: 1;
+    text-align: left;
+  }
+  
+  .footer-contact h4 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: lightgreen;
+  }
+  
+  .footer-contact a {
+    text-decoration: none;
+    color: white;
+  }
+  
+  .footer-contact a:hover {
+    color: lightgreen;
+  }
+  
+  .social-icons {
+    display: flex;
+    /* margin-top: 10px; */
+    gap: 10px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  
+  .social-icons :hover {
+    color: lightgreen;
+  }
+  
+  .footer-bottom {
+    margin-top: 20px;
+    font-size: 14px;
+    border-top: 1px solid #444;
+    padding-top: 10px;
+  }
+  
