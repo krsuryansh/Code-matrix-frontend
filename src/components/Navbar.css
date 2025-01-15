@@ -1,134 +1,196 @@
 /* General Styles */
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-  }
-  
-  .navbar {
-    background-color: rgb(21, 18, 18);
-    padding: 13px;
-    position: sticky;
-    top: 0px;
-    z-index: 990; 
-    box-shadow: 0 4px 10px rgba(42, 66, 42, 0.6); 
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
 
-  }
-  
-  .navbar-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .logo-container {
-    display: flex;
-    align-items: center;  /* Aligns the logo and text vertically */
-  }
-  
-  .logo {
-    text-transform: uppercase;
-    text-decoration: none;
-    font-size: 28px;
-    font-weight: bold;
-    color: white;
-    margin-left: 20px;  /* Adjusts the spacing between the logo image and text */
-  }
-  .logo-link{
-    text-decoration: none;
-  }
-  
-  /* Circular Logo Styles for Image */
-  .proj-logo {
-    width: 60px;  /* Set the width of the circle */
-    height: 60px; /* Set the height of the circle */
-    border-radius: 50%;  /* Makes it circular */
-    object-fit: cover;   /* Ensures the image fits inside the circle without distortion */
-    display: inline-block;  /* Ensures the image is inline with the text */
-  }
-  
-  /* Menu Styles */
-  .menu-items {
-    display: flex;
-    gap: 16px;
-  }
-  
-  .menu-link {
-    color: white;
-    text-decoration: none;
-    padding: 8px 16px;
-    transition: background-color  ease;
-  }
-  
-  .menu-link:hover {
-    background-color: #218838;
-    border-radius: 25px;
-  }
-  /* Authentication Buttons (Register, Sign In) */
+.navbar {
+  background-color: rgb(21, 18, 18);
+  padding: 13px;
+  position: sticky;
+  top: 0px;
+  z-index: 990; 
+  box-shadow: 0 4px 10px rgba(42, 66, 42, 0.6); 
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;  /* Aligns the logo and text vertically */
+}
+
+.logo {
+  text-transform: uppercase;
+  text-decoration: none;
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
+  margin-left: 20px;  /* Adjusts the spacing between the logo image and text */
+}
+.logo-link{
+  text-decoration: none;
+}
+
+/* Circular Logo Styles for Image */
+.proj-logo {
+  width: 60px;  /* Set the width of the circle */
+  height: 60px; /* Set the height of the circle */
+  border-radius: 50%;  /* Makes it circular */
+  object-fit: cover;   /* Ensures the image fits inside the circle without distortion */
+  display: inline-block;  /* Ensures the image is inline with the text */
+}
+
+/* Menu Styles */
+.menu-items {
+  display: flex;
+  gap: 16px;
+}
+
+.menu-link {
+  color: white;
+  text-decoration: none;
+  padding: 8px 16px;
+  transition: background-color  ease;
+}
+
+.menu-link:hover {
+  background-color: #218838;
+  border-radius: 25px;
+}
+
+/* Authentication Buttons (Register, Sign In) */
 .auth-buttons {
-    display: flex;
-    gap: 16px;
-  }
-  
-  .auth-button {
-    padding: 8px 16px;
-    font-size: 16px;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .register-btn {
-    background-color: #28a745;
-    color: white;
-  }
-  
-  .register-btn:hover {
-    background-color: #218838;
-  }
-  
-  .signin-btn {
-    background-color: #007bff;
-    color: white;
-  }
-  
-  .signin-btn:hover {
-    background-color: #0056b3;
-  }
-  
-  .hamburger {
-    display: none;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 30px;
-    cursor: pointer;
-  }
+  display: flex;
+  gap: 16px;
+}
 
-  .mat{
-    color: #28a745;
-  }
-  
-  /* Media Query for Mobile (Screen Width < 768px) */
-  @media (max-width: 768px) {
-    .menu-items {
+.auth-button {
+  padding: 8px 16px;
+  font-size: 16px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.register-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.register-btn:hover {
+  background-color: #218838;
+}
+
+.signin-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.signin-btn:hover {
+  background-color: #0056b3;
+}
+
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.mat{
+  color: #28a745;
+}
+
+.user-profile-button {
+  position: relative;
+}
+
+.user-button {
+  background-color: #28a745;
+  color: #ecf0f1;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  margin-right: 30px;
+  height: 50px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.user-button:hover {
+  background-color: #218838;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background-color: #34495e;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  z-index: 10;
+}
+
+.dropdown-item {
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #ecf0f1;
+  display: block;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.dropdown-item:hover {
+  background-color: #2c3e50;
+  color: #1abc9c;
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  color: #ecf0f1;
+  cursor: pointer;
+  padding: 10px 20px;
+  text-align: left;
+  width: 100%;
+}
+
+.logout-btn:hover {
+  background-color: #2c3e50;
+  color: #e74c3c;
+}
+
+/* Media Query for Mobile (Screen Width < 768px) */
+@media (max-width: 768px) {
+  .menu-items {
       display: none;
       flex-direction: column;
       gap: 8px;
-    }
-  
-    .menu-items.active {
+  }
+
+  .menu-items.active {
       display: flex;
-    }
-  
-    .hamburger {
+  }
+
+  .hamburger {
       display: block;
-    }
-  
-    .menu-link {
+  }
+
+  .menu-link {
       padding: 12px;
       text-align: center;
       width: 100%;
-    }
   }
-  
+}
