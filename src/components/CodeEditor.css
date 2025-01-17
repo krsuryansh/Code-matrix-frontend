@@ -1,18 +1,36 @@
 /* General styles for the container */
 .outer-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    align-items: flex-start;
     justify-content: flex-start;
-    padding: 20px;
+    padding: 26px;
+    width: 96.6%;
+    height: 90vh;
     background-color: #161212; /* Matches the Monaco Editor's dark theme */
     color: #fff;
     font-family: 'Arial', sans-serif;
   }
   
+  .blank-container{
+    width: 20%;
+    height: 90vh;
+    background-color: #222831;
+    color: #fff;
+    margin: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items:center;
+    justify-content: center;
+  }
+
   /* Style for the editor container */
   .editor-box {
-    width: 90%; /* Make it responsive */
+    display: flex; 
+    /* width: 95%; Make it responsive */
+    height: 100%;
     max-width: 1200px; /* Limit the width on larger screens */
     background-color: #252526; /* Slightly darker than the Monaco theme */
     border-radius: 8px;
@@ -21,11 +39,37 @@
     position: relative; /* For absolute positioning of the dropdown */
     margin: 5px;
     border: 3px solid #0d260d99;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .editor-container {
+    flex: 1;
+    height:90vh;
+    background-color: #252526;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin:10px;
+    width:60%; 
   }
   
+  .output-panel {
+    width: 20%; /* Define fixed width for the output panel */
+    background-color: #333; /* Darker background for output */
+    color: #fff;
+    border-radius: 8px;
+    /* margin-left: 20px;*/ /* Add some space between editor and output */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    height: 90vh; /* Match the height of the editor */
+    overflow-y: auto; /* Enable scrolling if the output exceeds the container height */
+    margin:10px;
+  }
+
   .editor-header {
     display: flex;
-    width: 90%; /* Make it responsive */
+    width: 100%; /* Make it responsive */
     max-width: 1200px; /* Limit the width on larger screens */
     background: #222831;
     justify-content: flex-start; /* Align items to the left */
@@ -66,12 +110,41 @@
     background-color: #2a8b2a; /* Dark green on hover */
   }
   
+  .output-panel h2 {
+    /* width:100%; */
+    font-size: 18px;
+    margin-bottom: 10px;
+    margin-left:20px;
+  }
+  
+  pre {
+    background-color: #222;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
   /* Responsive design */
   @media (max-width: 768px) {
+
+    .outer-container {
+      flex-direction: column;
+      align-items: center;
+  }
+
     .editor-box {
       width: 100%; /* Expand to full width on smaller screens */
     }
   
+    .output-panel {
+      width: 100%; /* Output expands to full width */
+      /* margin-left: 0; /* Remove left margin on smaller screens */
+      /* margin-top: 20px; Add space between editor and output panel */
+      margin: 20px 0 0;
+    }
+
     .dropdown {
       font-size: 14px;
       padding: 6px 10px;
@@ -80,6 +153,11 @@
     .run-button {
       font-size: 14px;
       padding: 6px 16px;
+    }
+
+    .blank-container{
+      width: 100%;
+      margin-bottom: 20px;
     }
   }
   

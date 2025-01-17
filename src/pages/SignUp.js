@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{useState}from 'react';
 import Navbar from '../components/Navbar';
 import HeroSection from '../components/HeroSection';
 import Signup from '../components/Signup';
@@ -6,6 +6,7 @@ import FooterSection from '../components/FooterSection';
 // import CodeEditor from '../components/CodeEditor';
 
 const SignUp = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const nav = {
         display: 'flex',
         justifyContent: 'center',
@@ -15,7 +16,7 @@ const SignUp = () => {
   return (
     <div>
       <Navbar />
-      <div style={nav}><Signup/></div>
+      <div style={nav}><Signup /></div>
       
       <FooterSection/>
     </div>
