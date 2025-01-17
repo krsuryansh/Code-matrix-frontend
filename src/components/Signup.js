@@ -1,10 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState , useContext} from 'react';
 import { useNavigate } from 'react-router-dom';
 import './login.css';
 import axios from 'axios';
+import { DataContext } from '../DataContext';
 
 function Signup() {
-  const [islogin, setIslogin] = useState(false);
+  const {setIslogin} = useContext(DataContext);
   const navigate = useNavigate(); // Use useNavigate for navigation
   const containerRef = useRef(null);
   const [successMessage, setSuccessMessage] = useState('');
@@ -87,7 +88,12 @@ function Signup() {
     try {
       const response = await axios.post('http://localhost:3000/user/login', loginData);
       setSuccessMessage(response.data.message);
+      setIslogin(response.data.success);
       setLoginData({ email: '', password: '' });
+      if (response.data.success) {
+        // Navigate to Editor page after successful login
+        navigate('/code');
+      }
     } catch (error) {
       setErrors(error.response?.data?.message || error.message);
       setSuccessMessage(`Login failed. ${error.message}`);

@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { Link } from 'react-router-dom';
 import './Navbar.css';  
 import logo from "../proj_img/logo.png";
+import { DataContext } from '../DataContext';
 
 const Navbar = () => {
+  const { islogin } = useContext(DataContext);
+  const { setIslogin } = useContext(DataContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(); // State to track if user is logged in
+   // State to track if user is logged in
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State to manage dropdown visibility
 
   const toggleMenu = () => {
@@ -18,7 +21,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     // Add logout logic here
-    setIsLoggedIn(false);
+    setIslogin(false);
     setIsDropdownOpen(false);
   };
 
@@ -44,7 +47,7 @@ const Navbar = () => {
 
         {/* Conditional Rendering for Auth Buttons or User Profile */}
         <div className="auth-section">
-          {isLoggedIn ? (
+          {islogin ? (
             <div className="user-profile-button">
               <button className="user-button" onClick={toggleDropdown}>User</button>
               {isDropdownOpen && (
