@@ -29,8 +29,8 @@
   /* Style for the editor container */
   .editor-box {
     display: flex; 
-    width: 95%; /* Make it responsive */
-    height: 90vh;
+    /* width: 95%; Make it responsive */
+    height: 100%;
     max-width: 1200px; /* Limit the width on larger screens */
     background-color: #252526; /* Slightly darker than the Monaco theme */
     border-radius: 8px;

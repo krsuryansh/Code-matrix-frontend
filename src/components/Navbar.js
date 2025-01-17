@@ -5,7 +5,7 @@ import logo from "../proj_img/logo.png";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // State to track if user is logged in
+  const [isLoggedIn, setIsLoggedIn] = useState(); // State to track if user is logged in
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State to manage dropdown visibility
 
   const toggleMenu = () => {

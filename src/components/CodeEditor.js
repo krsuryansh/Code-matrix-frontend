@@ -165,7 +165,7 @@ const CodeEditor = () => {
 
         <div className="editor-box">
           <Editor
-            height="70vh"
+            height="100%"
             defaultLanguage={codingLanguage}
             value={code}
             theme="vs-dark"
