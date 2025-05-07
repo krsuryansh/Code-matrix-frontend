@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import './Navbar.css';  
 import logo from "../proj_img/logo.png";
 import { DataContext } from '../DataContext';
+import axios from 'axios'; // Import axios for making HTTP requests
 
 const Navbar = () => {
   const { islogin } = useContext(DataContext);
@@ -19,8 +20,11 @@ const Navbar = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async() => {
     // Add logout logic here
+    const response = await axios.post('http://localhost:3000/user/logout',{}, {
+      withCredentials: true,  // Ensures cookies are sent with the request
+    });
     setIslogin(false);
     setIsDropdownOpen(false);
   };
@@ -42,7 +46,7 @@ const Navbar = () => {
         <div className={`menu-items ${isMenuOpen ? 'active' : ''}`}>
           <Link to="/" className="menu-link">Home</Link>
           <Link to="/code" className="menu-link">Start Code</Link>
-          <Link to="#" className="menu-link">Contact</Link>
+          <a href="#features" className="menu-link">Features</a>
         </div>
 
         {/* Conditional Rendering for Auth Buttons or User Profile */}
@@ -52,7 +56,7 @@ const Navbar = () => {
               <button className="user-button" onClick={toggleDropdown}>User</button>
               {isDropdownOpen && (
                 <div className="dropdown-menu">
-                  <Link to="/profile" className="dropdown-item">Profile</Link>
+                  <Link to="/Profile" className="dropdown-item">Profile</Link>
                   <Link to="/projects" className="dropdown-item">Projects</Link>
                   <Link to="/settings" className="dropdown-item">Settings</Link>
                   <button className="dropdown-item logout-btn" onClick={handleLogout}>Logout</button>

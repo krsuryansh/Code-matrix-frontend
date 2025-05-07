@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import "./CodeEditor.css"; // Import your custom CSS file
-
+import axios from 'axios';
 const CodeEditor = () => {
   // State to store the selected language
   const [codingLanguage, setcodingLanguage] = useState("javascript");
@@ -11,8 +11,64 @@ const CodeEditor = () => {
     setcodingLanguage(event.target.value);
   };
 
+  const [fileName, setFileName] = useState(""); // State to store the file name
   const [code, setCode] = useState("// Write your code here...");
   const [output, setOutput] = useState("Your output here... "); 
+
+  const [fileList, setFileList] = useState([]);
+
+  useEffect(() => {
+    // API call to backend
+    axios.get("http://localhost:3000/user/getFile",{withCredentials:true})  // replace USER_ID with actual ID or use token logic
+      .then(res => {
+        setFileList(res.data.filenames);
+      })
+      .catch(err => {
+        console.error("Error fetching filenames:", err);
+      });
+  }, []);
+
+
+
+  // Handler to save code (optional logic can be added here)
+  const handlesaveCode = async (e) => {
+    e.preventDefault(); // Prevent form reload
+
+    let finalFilename = fileName;
+
+    // 🔍 Check if filename is not set
+    if (!finalFilename || finalFilename.trim() === "") {
+      finalFilename = prompt("Please enter a filename:");
+
+      // 🛑 If user cancels or enters empty
+      if (!finalFilename || finalFilename.trim() === "") {
+        alert("Filename is required to save the code.");
+        return;
+      }
+
+      setFileName(finalFilename); // Set it so it won't ask again
+    }
+
+    try {
+      // ✅ Make POST request to backend
+      const response = await axios.post("http://localhost:3000/user/saveCode", {
+        filename: finalFilename,
+        code,
+        language: codingLanguage,
+      }, {
+        withCredentials: true, // VERY important if using cookie-based auth
+      });
+
+      if (response.status === 200) {
+        alert("Code saved successfully!");
+      } else {
+        alert("Something went wrong while saving.");
+      }
+    } catch (error) {
+      console.error("Error saving code:", error);
+      alert("Error saving code. Please check console.");
+    }
+  };
   // Dynamically load suggestions based on the selected language
   const handleEditorDidMount = (editor, monaco) => {
     // Register completion items based on the selected language
@@ -132,12 +188,49 @@ const CodeEditor = () => {
     alert("Run button clicked! You can add your logic here to run the code.");
   };
 
+
+  const handleFileClick = async(fileId) => {
+    try {
+      // Make a POST request to your backend API endpoint with the fileId
+      const response = await axios.post('http://localhost:3000/user/getCode', {
+        fileId: fileId,  // Send the fileId in the request body
+      }, {withCredentials:true}); // Include withCredentials if needed
+  
+      // Handle successful response
+      console.log('Code file fetched:', response.data);
+      setCode(response.data.code); // Set the code in the editor
+      return response.data; // You can return or use the data in your component as needed
+    } catch (error) {
+      // Handle error
+      console.error('Error fetching code file:', error.response?.data || error.message);
+    }
+  };
   return (
     <div className="outer-container">
       <div className="blank-container">
-        <h2>Blank Section</h2>
-        <p>chattt</p>
-      </div>
+        <div className="blank-header">
+        <h2>Project Files</h2>
+
+        </div>
+       
+
+        {fileList.map((file) => (
+          <div className="file-structure">
+          
+        <div className="item file" key={file._id}
+         onClick={() => handleFileClick(file._id)}
+         cursor="pointer"
+         style={{ cursor: "pointer" }} // Add this line to change the cursor to pointer
+        ><a>{file.filename}</a></div>
+       
+     
+       </div>
+        ))}
+        
+      
+  
+</div>
+
 
       {/*Editor Container*/}
 
@@ -160,6 +253,10 @@ const CodeEditor = () => {
             <button className="run-button" onClick={handleRunCode}>
               Run
             </button>
+
+            <button className="run-button" onClick={handlesaveCode}>
+              Save
+            </button>
           </form>
         </div>
 
@@ -177,6 +274,7 @@ const CodeEditor = () => {
               parameterHints: true,
             }}
             onMount={handleEditorDidMount} // Attach the onMount callback
+            onChange={(value) => setCode(value)} 
           />
         </div>
       </div>

@@ -22,8 +22,17 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
-    align-items:center;
+    /* align-items:center; */
+    /* padding-left: 25px; */
+    
+  }
+
+  .blank-header{
+    width: 100%;
+    display: flex;
     justify-content: center;
+    align-items: center;
+
   }
 
   /* Style for the editor container */
@@ -161,3 +170,40 @@
     }
   }
   
+
+
+
+  //file upload styles
+ 
+
+  /* File structure container */
+.file-structure {
+  font-family: 'Courier New', monospace;
+  background: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  max-height: 400px; /* Add max height to the file structure */
+  overflow-y: auto; /* Enable vertical scrolling when content overflows */
+}
+
+/* File and folder item styles */
+.item {
+  margin: 4px 0;
+  padding-left: 20px;
+}
+
+/* Folder item styles */
+.folder {
+  margin-left: 16px;
+}
+
+.folder::before {
+  content: "📁 ";
+}
+
+/* File item styles */
+.file::before {
+  content: "📄 ";
+}

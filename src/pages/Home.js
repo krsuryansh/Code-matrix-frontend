@@ -1,18 +1,21 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import Navbar from '../components/Navbar';
 import HeroSection from '../components/HeroSection';
 import FeatureSection from '../components/FeatureSection';
 import FooterSection from '../components/FooterSection';
-// import CodeEditor from '../components/CodeEditor';
+import { DataContext } from '../DataContext';
+
 
 const Home = () => {
+  const { setIslogin } = useContext(DataContext);
+
+
   return (
     <div>
       <Navbar />
-      <HeroSection/>
-      <FeatureSection /> 
-      
-      <FooterSection/>
+      <HeroSection />
+      <FeatureSection />
+      <FooterSection />
     </div>
   );
 };
