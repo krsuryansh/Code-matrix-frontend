@@ -30,6 +30,8 @@ const Navbar = () => {
     localStorage.removeItem('token');
     setIslogin(false);
     setIsDropdownOpen(false);
+    window.location.reload();
+
   };
 
   return (
