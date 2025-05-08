@@ -59,8 +59,10 @@ const CodeEditor = () => {
         filename: finalFilename,
         code,
         language: codingLanguage,
-      }, {
-        withCredentials: true, // VERY important if using cookie-based auth
+      },{
+        headers: {
+          Authorization: `Bearer ${localStorage?.getItem("token") || null}`
+        }
       });
 
       if (response.status === 200) {
