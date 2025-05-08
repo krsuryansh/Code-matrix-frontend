@@ -20,19 +20,27 @@ const Navbar = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleLogout = async() => {
-    // Add logout logic here
-    await axios.post('https://college-project-backend-rtiw.onrender.com/user/logout',{},{
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      }
-    } );
-    localStorage.removeItem('token');
-    setIslogin(false);
-    setIsDropdownOpen(false);
-    window.location.reload();
-
+  const handleLogout = async () => {
+    try {
+      // Make logout API call
+      await axios.post('https://college-project-backend-rtiw.onrender.com/user/logout', {}, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+  
+      // Clear local storage and state
+      localStorage.removeItem('token');
+      setIslogin(false);
+      setIsDropdownOpen(false);
+  
+      // Full page reload after everything is done
+      window.location.reload();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
+  
 
   return (
     <nav className="navbar">
