@@ -19,7 +19,11 @@ const CodeEditor = () => {
 
   useEffect(() => {
     // API call to backend
-    axios.get("http://localhost:3000/user/getFile",{withCredentials:true})  // replace USER_ID with actual ID or use token logic
+    axios.get("https://college-project-backend-rtiw.onrender.com/user/getFile",  {
+      headers: {
+        Authorization: `Bearer ${localStorage?.getItem("token") || null}`
+      }
+    })
       .then(res => {
         setFileList(res.data.filenames);
       })
@@ -51,7 +55,7 @@ const CodeEditor = () => {
 
     try {
       // ✅ Make POST request to backend
-      const response = await axios.post("http://localhost:3000/user/saveCode", {
+      const response = await axios.post("https://college-project-backend-rtiw.onrender.com/user/saveCode", {
         filename: finalFilename,
         code,
         language: codingLanguage,
@@ -192,9 +196,13 @@ const CodeEditor = () => {
   const handleFileClick = async(fileId) => {
     try {
       // Make a POST request to your backend API endpoint with the fileId
-      const response = await axios.post('http://localhost:3000/user/getCode', {
+      const response = await axios.post('https://college-project-backend-rtiw.onrender.com/user/getCode', {
         fileId: fileId,  // Send the fileId in the request body
-      }, {withCredentials:true}); // Include withCredentials if needed
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }); // Include withCredentials if needed
   
       // Handle successful response
       console.log('Code file fetched:', response.data);

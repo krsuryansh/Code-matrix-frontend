@@ -22,9 +22,8 @@ const Navbar = () => {
 
   const handleLogout = async() => {
     // Add logout logic here
-    const response = await axios.post('http://localhost:3000/user/logout',{}, {
-      withCredentials: true,  // Ensures cookies are sent with the request
-    });
+    await axios.post('https://college-project-backend-rtiw.onrender.com/user/logout',{} );
+    localStorage.removeItem('token');
     setIslogin(false);
     setIsDropdownOpen(false);
   };

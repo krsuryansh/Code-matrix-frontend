@@ -18,10 +18,16 @@ const App = () => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          // const response = await axios.get('http://localhost:3000/user/home');
-          const response = await axios.post('http://localhost:3000/user/home',{}, {
-            withCredentials: true,  // Ensures cookies are sent with the request
-          });
+
+          const response = await axios.post(
+            'https://college-project-backend-rtiw.onrender.com/user/home',
+            {}, // request body
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+              }
+            }
+          );
           
           setIslogin(response.data.success);
           if(response){
