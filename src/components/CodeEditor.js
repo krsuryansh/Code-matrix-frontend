@@ -198,7 +198,10 @@ const CodeEditor = () => {
   
       // Handle successful response
       console.log('Code file fetched:', response.data);
-      setCode(response.data.code); // Set the code in the editor
+      console.log('Code file fetched:', response.data.codeFile.code);
+      setCode(response.data.codeFile.code); // Set the code in the editor
+      setcodingLanguage(response.data.codeFile.language); // Set the language in the dropdown
+      setFileName(response.data.codeFile.filename); // Set the filename in the state
       return response.data; // You can return or use the data in your component as needed
     } catch (error) {
       // Handle error
