@@ -1,11 +1,12 @@
 import React, { useState,useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';  
-import logo from "../proj_img/logo.png";
+import logo from "../proj_img/logo.png"; 
 import { DataContext } from '../DataContext';
 import axios from 'axios'; // Import axios for making HTTP requests
 
 const Navbar = () => {
+   const navigate = useNavigate(); // Use useNavigate for navigation
   const { islogin } = useContext(DataContext);
   const { setIslogin } = useContext(DataContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -35,7 +36,8 @@ const Navbar = () => {
       setIsDropdownOpen(false);
   
       // Full page reload after everything is done
-      window.location.reload();
+      // window.location.reload();
+      navigate('/Signup');
     } catch (error) {
       console.error("Logout failed:", error);
     }
