@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import "./CodeEditor.css"; // Import your custom CSS file
+import Addfile from "../Feature_img/add-file.png"; // Import your image
 import axios from 'axios';
 const CodeEditor = () => {
   // State to store the selected language
@@ -31,6 +32,36 @@ const CodeEditor = () => {
         console.error("Error fetching filenames:", err);
       });
   }, []);
+
+  // Handler to create a new file
+  const handleNewfile = async() => {
+            const newFileName = prompt("Enter new file name:");
+            const newFileLanguage = prompt("Enter file language (e.g., javascript, c, cpp, java):");
+            if (newFileName && newFileLanguage) {
+                            try {
+                // ✅ Make POST request to backend
+                const response = await axios.post("https://college-project-backend-rtiw.onrender.com/user/saveCode", {
+                  filename: newFileName,
+                  code,
+                  language: newFileLanguage,
+                },{
+                  headers: {
+                    Authorization: `Bearer ${localStorage?.getItem("token") || null}`
+                  }
+                });
+
+                if (response.status === 200) {
+                  alert("Code saved successfully!");
+                } else {
+                  alert("Something went wrong while saving.");
+                }
+              } catch (error) {
+                console.error("Error saving code:", error);
+                alert("Error saving code. Please check console.");
+              }
+
+          }
+        }
 
 
 
@@ -222,7 +253,11 @@ const CodeEditor = () => {
     <div className="outer-container">
       <div className="blank-container">
         <div className="blank-header">
-        <h2>Project Files</h2>
+           <div className="add-file">
+            <h2>Project Files</h2>
+            <button className="add-file-button" onClick={handleNewfile}> 
+              <img src= {Addfile} alt="Add File" />
+            </button>
 
         </div>
        
@@ -239,6 +274,7 @@ const CodeEditor = () => {
      
        </div>
         ))}
+        </div>
         
       
   
@@ -285,6 +321,7 @@ const CodeEditor = () => {
               minimap: { enabled: false },
               suggestOnTriggerCharacters: true,
               parameterHints: true,
+              automaticLayout: true,
             }}
             onMount={handleEditorDidMount} // Attach the onMount callback
             onChange={(value) => setCode(value)} 
