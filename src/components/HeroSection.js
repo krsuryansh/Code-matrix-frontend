@@ -2,6 +2,7 @@ import React from 'react';
 import './HeroSection.css'; // Import the CSS file
 import hero from "../proj_img/herosection.webp";
 import hero1 from "../proj_img/hero1.webp"
+import { Link } from 'react-router-dom';
 
 
 const HeroSection = () => {
@@ -18,7 +19,7 @@ const HeroSection = () => {
             <br/>
             <br/>
           </p>
-          <button className="cta-button">Learn More</button>
+          <button className="cta-button"><Link to="/code" className="menu-link">Start Code</Link></button>
         </div>
 
         {/* Right Side: Image */}

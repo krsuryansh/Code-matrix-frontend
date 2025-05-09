@@ -6,7 +6,7 @@ const DataContext = createContext();
 // Create Provider Component
 const DataProvider = ({ children }) => {
   const [data, setData] = useState("Initial Data");
-   const [islogin, setIslogin] = useState(false);
+   const [islogin, setIslogin] = useState();
 
   return (
     <DataContext.Provider value={{ data, setData,islogin,setIslogin }}>

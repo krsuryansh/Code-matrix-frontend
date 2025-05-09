@@ -61,7 +61,7 @@ function Signup() {
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/user/register', formData);
+      const response = await axios.post('https://college-project-backend-rtiw.onrender.com/user/register', formData);
       setSuccessMessage(response.data.message);
       setIslogin(response.data.success);
 
@@ -86,11 +86,12 @@ function Signup() {
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/user/login', loginData);
+      const response = await axios.post('https://college-project-backend-rtiw.onrender.com/user/login', loginData);
       setSuccessMessage(response.data.message);
-      setIslogin(response.data.success);
       setLoginData({ email: '', password: '' });
       if (response.data.success) {
+        localStorage.setItem('token', response.data.data.token);
+        setIslogin(response.data.success);
         // Navigate to Editor page after successful login
         navigate('/code');
       }

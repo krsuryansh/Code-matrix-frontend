@@ -1,10 +1,12 @@
 import React, { useState,useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';  
-import logo from "../proj_img/logo.png";
+import logo from "../proj_img/logo.png"; 
 import { DataContext } from '../DataContext';
+import axios from 'axios'; // Import axios for making HTTP requests
 
 const Navbar = () => {
+   const navigate = useNavigate(); // Use useNavigate for navigation
   const { islogin } = useContext(DataContext);
   const { setIslogin } = useContext(DataContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -19,11 +21,28 @@ const Navbar = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleLogout = () => {
-    // Add logout logic here
-    setIslogin(false);
-    setIsDropdownOpen(false);
+  const handleLogout = async () => {
+    try {
+      // Make logout API call
+      await axios.post('https://college-project-backend-rtiw.onrender.com/user/logout', {}, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+  
+      // Clear local storage and state
+      localStorage.removeItem('token');
+      setIslogin(false);
+      setIsDropdownOpen(false);
+  
+      // Full page reload after everything is done
+      // window.location.reload();
+      navigate('/Signup');
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
+  
 
   return (
     <nav className="navbar">
@@ -42,7 +61,7 @@ const Navbar = () => {
         <div className={`menu-items ${isMenuOpen ? 'active' : ''}`}>
           <Link to="/" className="menu-link">Home</Link>
           <Link to="/code" className="menu-link">Start Code</Link>
-          <Link to="#" className="menu-link">Contact</Link>
+          <a href="#features" className="menu-link">Features</a>
         </div>
 
         {/* Conditional Rendering for Auth Buttons or User Profile */}
@@ -52,7 +71,7 @@ const Navbar = () => {
               <button className="user-button" onClick={toggleDropdown}>User</button>
               {isDropdownOpen && (
                 <div className="dropdown-menu">
-                  <Link to="/profile" className="dropdown-item">Profile</Link>
+                  <Link to="/Profile" className="dropdown-item">Profile</Link>
                   <Link to="/projects" className="dropdown-item">Projects</Link>
                   <Link to="/settings" className="dropdown-item">Settings</Link>
                   <button className="dropdown-item logout-btn" onClick={handleLogout}>Logout</button>

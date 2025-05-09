@@ -1,0 +1,169 @@
+
+  
+  .profile-details-container {
+    width: 800px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 3rem;
+  }
+  
+  .user-card-full {
+    display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+    width: 100%;
+  }
+  
+  .user-profile {
+    background: linear-gradient(to right, #ee5a6f, #f29263);
+    padding: 20px;
+    text-align: center;
+    color: white;
+    width: 30%;
+    border-radius: 5px 0 0 5px;
+  }
+  
+  .card-block {
+    padding: 1.25rem;
+  }
+  
+  .m-b-25 {
+    margin-bottom: 25px;
+  }
+  
+  .img-radius {
+    border-radius: 50%;
+  }
+  
+  .f-w-600 {
+    font-weight: 600;
+  }
+  
+  .m-b-10 {
+    margin-bottom: 10px;
+  }
+  
+  .m-b-20 {
+    margin-bottom: 20px;
+  }
+  
+  .m-t-40 {
+    margin-top: 20px;
+  }
+  
+  .p-b-5 {
+    padding-bottom: 5px;
+  }
+  
+  .b-b-default {
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .text-muted {
+    color: #919aa3;
+  }
+  
+  /* Styling the Information Section */
+  .info-block {
+    width: 60%;
+    padding: 20px;
+  }
+  
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #eee;
+  }
+  
+  .info-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .info-item {
+    flex: 1 1 45%;
+    margin-bottom: 1rem;
+  }
+  
+  .info-label {
+    font-weight: 600;
+  }
+  
+  .text-muted {
+    color: #919aa3;
+  }
+  
+  /* Styling for Projects Section */
+  .projects-section {
+    margin-top: 20px;
+  }
+  
+  .projects-section h6 {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  
+  .projects-section .info-item {
+    margin-bottom: 1rem;
+  }
+  
+  /* Social Media Links */
+  .social-link {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    padding: 0;
+    list-style: none;
+  }
+  
+  .social-link li {
+    margin-right: 10px;
+  }
+  
+  .social-link li a {
+    font-size: 1.5rem;
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .social-link li a:hover {
+    color: #AB47BC;
+  }
+  
+  /* Icon colors */
+  .mdi-facebook {
+    color: #3b5998;
+  }
+  
+  .mdi-twitter {
+    color: #55acee;
+  }
+  
+  .mdi-instagram {
+    color: #e4405f;
+  }
+  
+  /* Edit Icon */
+  .mdi-square-edit-outline {
+    font-size: 20px;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+  
+  /* Styling for Card text */
+  .card-block p {
+    line-height: 25px;
+  }
+  
+  .card-block .f-w-600 {
+    font-weight: 600;
+  }
+  
+  .card-block .f-w-400 {
+    font-weight: 400;
+  }
+  
