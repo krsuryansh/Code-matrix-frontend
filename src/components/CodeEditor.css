@@ -31,6 +31,11 @@
   /* display: flex; */
   justify-content: center;
   align-items: center;
+  overflow: scroll;
+}
+
+.blank-header::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .add-file{
@@ -199,12 +204,17 @@ pre {
 /* File structure container */
 .file-structure {
 font-family: 'Courier New', monospace;
+font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
 padding: 10px;
 border-radius: 8px;
 margin-top: 10px;
 box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 max-height: 400px; /* Add max height to the file structure */
 overflow-y: auto; /* Enable vertical scrolling when content overflows */
+}
+
+.file-structure:hover{
+background-color: #218838; /* Darker background on hover */
 }
 
 /* File and folder item styles */

@@ -252,15 +252,16 @@ const CodeEditor = () => {
   return (
     <div className="outer-container">
       <div className="blank-container">
-        <div className="blank-header">
-           <div className="add-file">
+
+          <div className="add-file">
             <h2>Project Files</h2>
             <button className="add-file-button" onClick={handleNewfile}> 
               <img src= {Addfile} alt="Add File" />
             </button>
-
-        </div>
+          </div>
        
+        <div className="blank-header">
+         
 
         {fileList.map((file) => (
           <div className="file-structure">
@@ -277,8 +278,7 @@ const CodeEditor = () => {
         </div>
         
       
-  
-</div>
+    </div>
 
 
       {/*Editor Container*/}
