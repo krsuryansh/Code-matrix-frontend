@@ -264,7 +264,9 @@ const CodeEditor = () => {
          
 
         {fileList.map((file) => (
-          <div className="file-structure">
+          <div className="file-structure"
+          tabIndex={0}
+          >
           
         <div className="item file" key={file._id}
          onClick={() => handleFileClick(file._id)}
@@ -322,6 +324,7 @@ const CodeEditor = () => {
               suggestOnTriggerCharacters: true,
               parameterHints: true,
               automaticLayout: true,
+              readOnly: false,
             }}
             onMount={handleEditorDidMount} // Attach the onMount callback
             onChange={(value) => setCode(value)} 

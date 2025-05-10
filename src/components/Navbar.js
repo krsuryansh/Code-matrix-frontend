@@ -61,7 +61,7 @@ const Navbar = () => {
         <div className={`menu-items ${isMenuOpen ? 'active' : ''}`}>
           <Link to="/" className="menu-link">Home</Link>
           <Link to="/code" className="menu-link">Start Code</Link>
-          <a href="#features" className="menu-link">Features</a>
+          <a href="/#features" className="menu-link">Features</a>
         </div>
 
         {/* Conditional Rendering for Auth Buttons or User Profile */}
