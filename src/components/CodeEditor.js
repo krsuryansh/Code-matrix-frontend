@@ -1,9 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import Editor from "@monaco-editor/react";
+import io from "socket.io-client";
 import "./CodeEditor.css"; // Import your custom CSS file
 import Addfile from "../Feature_img/add-file.png"; // Import your image
 import axios from 'axios';
+import { useParams, useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+import { DataContext } from '../DataContext';
+
+
 const CodeEditor = () => {
+  const [ShareCodeOwner, setShareCodeOwner] = useState();
+  const {user} = useContext(DataContext);
+  const { islogin } = useContext(DataContext);
+   
+  
   // State to store the selected language
   const [codingLanguage, setcodingLanguage] = useState("javascript");
 
@@ -17,6 +28,69 @@ const CodeEditor = () => {
   const [output, setOutput] = useState("Your output here... "); 
 
   const [fileList, setFileList] = useState([]);
+  const [shareLink, setShareLink] = useState("");
+  const navigate = useNavigate();
+   const { roomId } = useParams();
+
+
+
+
+  // all socket work doene here 
+  // const socket = io.connect("http://localhost:3000");
+  const socket = io.connect("https://college-project-backend-rtiw.onrender.com");
+ useEffect(() => {
+    
+        socket.emit("join-room", {roomId});
+          console.log("Socket connected:", socket.id);
+
+          // Listen for events
+          socket.on("message", (message) => {
+            console.log("Received message:", message);
+          });
+          
+          socket.emit("shareCode", {roomId, userId: user._id, code});
+
+          socket.on("codeRecive", (data) => {
+            setCode(data.code);
+            setShareCodeOwner(data.by);
+            // console.log("Received code:", data.by);
+          });
+
+          socket.on("codeUpdate", ({code, codingLanguage}) => {
+            setCode(code);
+            setcodingLanguage(codingLanguage);
+          });
+      
+     
+      // Cleanup on unmount
+      return () => {
+       socket.off("message");
+       socket.off("codeUpdate");
+       socket.off("codeRecive");
+      };
+    
+  }, [roomId]);  // Empty dependency array ensures this runs only once
+  // Handler to share code (optional logic can be added here)
+  const handleshareCode = () => {
+     const id = uuidv4();
+    const link = `${window.location.origin}/code/${id}`;
+ 
+     navigator.clipboard.writeText(link)
+     .then(() => {
+        alert("Link copied: " + link);
+      })
+      .catch(err => {
+        console.error("Failed to copy: ", err);
+      });
+
+     
+    navigate(`/code/${id}`);
+    
+  }
+
+
+
+console.log(`This is link:${shareLink}`);
 
   useEffect(() => {
     // API call to backend
@@ -32,6 +106,30 @@ const CodeEditor = () => {
         console.error("Error fetching filenames:", err);
       });
   }, []);
+
+const debounceTimeout = useRef(null);
+
+  const handleCodeChange = (value) => {
+    const newCode = value;
+    setCode(newCode);
+
+
+     if (debounceTimeout.current) {
+    clearTimeout(debounceTimeout.current);
+      }
+
+
+       debounceTimeout.current = setTimeout(() => {
+        socket.emit("codeChange", { roomId, code: newCode, codingLanguage });
+    
+          }, 300); // Adjust debounce delay (ms)
+    
+  };
+
+
+
+  
+
 
   // Handler to create a new file
   const handleNewfile = async() => {
@@ -287,6 +385,7 @@ const CodeEditor = () => {
 
       <div className="editor-container">
         <div className="editor-header">
+          <div className="editor-title">
           <form>
             <select
               className="dropdown"
@@ -308,7 +407,13 @@ const CodeEditor = () => {
             <button className="run-button" onClick={handlesaveCode}>
               Save
             </button>
+
+             <button className="run-button" onClick={handleshareCode}>
+              Share
+            </button>
           </form>
+          </div>
+          {ShareCodeOwner && <div>{ShareCodeOwner}</div>}
         </div>
 
         <div className="editor-box">
@@ -327,7 +432,8 @@ const CodeEditor = () => {
               readOnly: false,
             }}
             onMount={handleEditorDidMount} // Attach the onMount callback
-            onChange={(value) => setCode(value)} 
+            // onChange={(value) => setCode(value)} 
+            onChange={handleCodeChange  }
           />
         </div>
       </div>

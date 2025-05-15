@@ -1,7 +1,13 @@
 import React from 'react';
 import './ProfileDetails.css';
+import { DataContext } from '../DataContext';
+import { useContext } from 'react';
 
 const ProfileDetails = () => {
+ const {user} = useContext(DataContext);
+
+
+
   return (
     <div className="profile-details-container">
       <div className="user-card-full">
@@ -14,8 +20,7 @@ const ProfileDetails = () => {
                 alt="User-Profile"
               />
             </div>
-            <h6 className="f-w-600">Hembo Tingor</h6>
-            <p>Web Designer</p>
+            <h3 className="f-w-600">{user.fullname}</h3>
             <i className="mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
           </div>
         </div>
@@ -24,26 +29,19 @@ const ProfileDetails = () => {
           <div className="info-row">
             <div className="info-item">
               <p className="info-label">Email</p>
-              <h6 className="text-muted">rntng@gmail.com</h6>
+              <h6 className="text-muted">{user.email}</h6>
             </div>
             <div className="info-item">
-              <p className="info-label">Phone</p>
-              <h6 className="text-muted">98979989898</h6>
+              <p className="info-label">User Name</p>
+              <h6 className="text-muted">{user.username}</h6>
+            </div>
+            <div className="info-item">
+              <p className="info-label">userId</p>
+              <h6 className="text-muted">{user._id}</h6>
             </div>
           </div>
 
-          <h6 className="section-title">Projects</h6>
-          <div className="info-row">
-            <div className="info-item">
-              <p className="info-label">Recent</p>
-              <h6 className="text-muted">Sam Disuja</h6>
-            </div>
-            <div className="info-item">
-              <p className="info-label">Most Viewed</p>
-              <h6 className="text-muted">Dinoter husainm</h6>
-            </div>
-          </div>
-
+        
           <ul className="social-link">
             <li>
               <a href="#!">

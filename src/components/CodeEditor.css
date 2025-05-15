@@ -110,7 +110,7 @@
   width: 100%; /* Make it responsive */
   max-width: 1200px; /* Limit the width on larger screens */
   background: #222831;
-  justify-content: flex-start; /* Align items to the left */
+  justify-content: space-between; /* Align items to the left */
   border-radius: 10px 10px 0 0;
   padding: 5px 0;
 }

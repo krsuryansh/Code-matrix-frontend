@@ -14,6 +14,8 @@ import { Routes, Route } from "react-router-dom";
 // this is final test
 const App = () => {
   const { setIslogin } = useContext(DataContext);
+  const { setUserId } = useContext(DataContext);
+  const { setUser} = useContext(DataContext);
   
     useEffect(() => {
       const fetchData = async () => {
@@ -30,6 +32,8 @@ const App = () => {
           );
           
           setIslogin(response.data.success);
+          setUserId(response.data.user._id);
+          setUser(response.data.user);
           if(response){
             console.log(`User ${response}`)
           }
@@ -49,6 +53,8 @@ const App = () => {
         <Route path="/Signup" element={<SignUp />} />
         <Route path="/Profile" element={<Profile />} />
         <Route path="/Chat" element={<ChatApp />} />
+        <Route path="/code/:roomId" element={<Editor  />} />
+
         {/* <Route path="/contact" element={<Contact />} /> */}
       </Routes>
     </div>
