@@ -1,421 +1,206 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import Editor from "@monaco-editor/react";
 import io from "socket.io-client";
-import "./CodeEditor.css"; // Import your custom CSS file
-import Addfile from "../Feature_img/add-file.png"; // Import your image
+import "./CodeEditor.css";
+import Addfile from "../Feature_img/add-file.png";
 import axios from 'axios';
 import { useParams, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { DataContext } from '../DataContext';
 
-
 const CodeEditor = () => {
+  const socket = useRef(io("https://college-project-backend-rtiw.onrender.com")).current;
+
   const [ShareCodeOwner, setShareCodeOwner] = useState();
-  const {user} = useContext(DataContext);
-  const { islogin } = useContext(DataContext);
-   
-  
-  // State to store the selected language
+  const { user, islogin } = useContext(DataContext);
+  const [owner, setOwner] = useState(false);
   const [codingLanguage, setcodingLanguage] = useState("javascript");
-
-  // Handler to update state on dropdown change
-  const handleChange = (event) => {
-    setcodingLanguage(event.target.value);
-  };
-
-  const [fileName, setFileName] = useState(""); // State to store the file name
+  const [fileName, setFileName] = useState("");
   const [code, setCode] = useState("// Write your code here...");
-  const [output, setOutput] = useState("Your output here... "); 
-
+  const [output, setOutput] = useState("Your output here... ");
   const [fileList, setFileList] = useState([]);
-  const [shareLink, setShareLink] = useState("");
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatMessages, setChatMessages] = useState([]);
+  const [chatInput, setChatInput] = useState("");
+  const { roomId } = useParams();
   const navigate = useNavigate();
-   const { roomId } = useParams();
-
-
-
-
-  // all socket work doene here 
-  // const socket = io.connect("http://localhost:3000");
-  const socket = io.connect("https://college-project-backend-rtiw.onrender.com");
- useEffect(() => {
-    
-        socket.emit("join-room", {roomId});
-          console.log("Socket connected:", socket.id);
-
-          // Listen for events
-          socket.on("message", (message) => {
-            console.log("Received message:", message);
-          });
-          
-          socket.emit("shareCode", {roomId, userId: user._id, code});
-
-          socket.on("codeRecive", (data) => {
-            setCode(data.code);
-            setShareCodeOwner(data.by);
-            // console.log("Received code:", data.by);
-          });
-
-          socket.on("codeUpdate", ({code, codingLanguage}) => {
-            setCode(code);
-            setcodingLanguage(codingLanguage);
-          });
-      
-     
-      // Cleanup on unmount
-      return () => {
-       socket.off("message");
-       socket.off("codeUpdate");
-       socket.off("codeRecive");
-      };
-    
-  }, [roomId]);  // Empty dependency array ensures this runs only once
-  // Handler to share code (optional logic can be added here)
-  const handleshareCode = () => {
-     const id = uuidv4();
-    const link = `${window.location.origin}/code/${id}`;
- 
-     navigator.clipboard.writeText(link)
-     .then(() => {
-        alert("Link copied: " + link);
-      })
-      .catch(err => {
-        console.error("Failed to copy: ", err);
-      });
-
-     
-    navigate(`/code/${id}`);
-    
-  }
-
-
-
-console.log(`This is link:${shareLink}`);
+  const debounceTimeout = useRef(null);
 
   useEffect(() => {
-    // API call to backend
-    axios.get("https://college-project-backend-rtiw.onrender.com/user/getFile",  {
+    console.log("Joining room:", roomId);
+    socket.emit("join-room", { roomId });
+    socket.emit("shareCode", { roomId, userId: user?._id, code });
+
+    socket.on("message", (message) => console.log("Received message:", message));
+    socket.on("codeRecive", (data) => {
+      setCode(data.code);
+      setShareCodeOwner(data.by);
+    });
+    socket.on("codeUpdate", ({ code, codingLanguage }) => {
+      if (!owner) {
+        setCode(code);
+        setcodingLanguage(codingLanguage);
+      }
+    });
+
+    socket.on("receiveMessage", (data) => {
+      console.log("Received chat:", data);
+      setChatMessages((prev) => [...prev, data]);
+    });
+
+    return () => {
+      socket.off("message");
+      socket.off("codeRecive");
+      socket.off("codeUpdate");
+      socket.off("receiveMessage");
+    };
+  }, [roomId]);
+
+  useEffect(() => {
+    axios.get("https://college-project-backend-rtiw.onrender.com/user/getFile", {
       headers: {
         Authorization: `Bearer ${localStorage?.getItem("token") || null}`
       }
     })
-      .then(res => {
-        setFileList(res.data.filenames);
-      })
-      .catch(err => {
-        console.error("Error fetching filenames:", err);
-      });
+    .then(res => setFileList(res.data.filenames))
+    .catch(err => console.error("Error fetching filenames:", err));
   }, []);
 
-const debounceTimeout = useRef(null);
+  const handleChange = (e) => setcodingLanguage(e.target.value);
 
   const handleCodeChange = (value) => {
-    const newCode = value;
-    setCode(newCode);
-
-
-     if (debounceTimeout.current) {
-    clearTimeout(debounceTimeout.current);
-      }
-
-
-       debounceTimeout.current = setTimeout(() => {
-        socket.emit("codeChange", { roomId, code: newCode, codingLanguage });
-    
-          }, 300); // Adjust debounce delay (ms)
-    
+    setCode(value);
+    if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
+    debounceTimeout.current = setTimeout(() => {
+      socket.emit("codeChange", { roomId, code: value, codingLanguage });
+    }, 500);
   };
 
+  const sendMessage = () => {
+    if (chatInput.trim()) {
+      const username = user?.username || "Guest";
+      const msgObj = {
+        roomId,
+        message: chatInput,
+        user: username,
+        timestamp: new Date().toISOString(),
+      };
 
-
-  
-
-
-  // Handler to create a new file
-  const handleNewfile = async() => {
-            const newFileName = prompt("Enter new file name:");
-            const newFileLanguage = prompt("Enter file language (e.g., javascript, c, cpp, java):");
-            if (newFileName && newFileLanguage) {
-                            try {
-                // ✅ Make POST request to backend
-                const response = await axios.post("https://college-project-backend-rtiw.onrender.com/user/saveCode", {
-                  filename: newFileName,
-                  code,
-                  language: newFileLanguage,
-                },{
-                  headers: {
-                    Authorization: `Bearer ${localStorage?.getItem("token") || null}`
-                  }
-                });
-
-                if (response.status === 200) {
-                  alert("Code saved successfully!");
-                } else {
-                  alert("Something went wrong while saving.");
-                }
-              } catch (error) {
-                console.error("Error saving code:", error);
-                alert("Error saving code. Please check console.");
-              }
-
-          }
-        }
-
-
-
-  // Handler to save code (optional logic can be added here)
-  const handlesaveCode = async (e) => {
-    e.preventDefault(); // Prevent form reload
-
-    let finalFilename = fileName;
-
-    // 🔍 Check if filename is not set
-    if (!finalFilename || finalFilename.trim() === "") {
-      finalFilename = prompt("Please enter a filename:");
-
-      // 🛑 If user cancels or enters empty
-      if (!finalFilename || finalFilename.trim() === "") {
-        alert("Filename is required to save the code.");
-        return;
-      }
-
-      setFileName(finalFilename); // Set it so it won't ask again
+      socket.emit("sendMessage", msgObj);
+      setChatMessages((prev) => [...prev, { ...msgObj, user: "Me" }]);
+      setChatInput("");
     }
+  };
 
+  const handleEditorDidMount = (editor, monaco) => {};
+
+  const handleshareCode = () => {
+    const id = uuidv4();
+    const link = `${window.location.origin}/code/${id}`;
+    navigator.clipboard.writeText(link).then(() => alert("Link copied: " + link));
+    setOwner(true);
+    navigate(`/code/${id}`);
+  };
+
+  const handleNewfile = async () => {
+    const newFileName = prompt("Enter new file name:");
+    const newFileLanguage = prompt("Enter file language:");
+    if (newFileName && newFileLanguage) {
+      try {
+        const res = await axios.post("https://college-project-backend-rtiw.onrender.com/user/saveCode", {
+          filename: newFileName, code, language: newFileLanguage
+        }, {
+          headers: {
+            Authorization: `Bearer ${localStorage?.getItem("token") || null}`
+          }
+        });
+        if (res.status === 200) alert("Code saved successfully!");
+      } catch (err) {
+        console.error("Error saving code:", err);
+      }
+    }
+  };
+
+  const handlesaveCode = async (e) => {
+    e.preventDefault();
+    let finalFilename = fileName || prompt("Please enter a filename:");
+    if (!finalFilename) return alert("Filename is required.");
+    setFileName(finalFilename);
     try {
-      // ✅ Make POST request to backend
-      const response = await axios.post("https://college-project-backend-rtiw.onrender.com/user/saveCode", {
-        filename: finalFilename,
-        code,
-        language: codingLanguage,
-      },{
+      const res = await axios.post("https://college-project-backend-rtiw.onrender.com/user/saveCode", {
+        filename: finalFilename, code, language: codingLanguage
+      }, {
         headers: {
           Authorization: `Bearer ${localStorage?.getItem("token") || null}`
         }
       });
-
-      if (response.status === 200) {
-        alert("Code saved successfully!");
-      } else {
-        alert("Something went wrong while saving.");
-      }
-    } catch (error) {
-      console.error("Error saving code:", error);
-      alert("Error saving code. Please check console.");
+      if (res.status === 200) alert("Code saved successfully!");
+    } catch (err) {
+      console.error("Error saving code:", err);
     }
   };
-  // Dynamically load suggestions based on the selected language
-  const handleEditorDidMount = (editor, monaco) => {
-    // Register completion items based on the selected language
-    const registerCompletionItems = () => {
-      // Register completion provider for JavaScript
-      if (codingLanguage === "javascript") {
-        monaco.languages.registerCompletionItemProvider("javascript", {
-          provideCompletionItems: () => {
-            const suggestions = [
-              {
-                label: "console.log",
-                kind: monaco.languages.CompletionItemKind.Function,
-                insertText: "console.log(${1});",
-                insertTextRules:
-                  monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: "Log output to the console",
-              },
-              {
-                label: "useState",
-                kind: monaco.languages.CompletionItemKind.Snippet,
-                insertText:
-                  "const [${1:state}, ${2:setState}] = useState(${3:initialValue});",
-                insertTextRules:
-                  monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: "React useState Hook",
-              },
-            ];
-            return { suggestions };
-          },
-        });
-      }
 
-      // Register completion provider for C
-      if (codingLanguage === "c") {
-        monaco.languages.registerCompletionItemProvider("c", {
-          provideCompletionItems: () => {
-            const suggestions = [
-              {
-                label: "#include <stdio.h>",
-                kind: monaco.languages.CompletionItemKind.Keyword,
-                insertText: "#include <stdio.h>",
-                documentation: "Standard input-output library in C",
-              },
-              {
-                label: "printf",
-                kind: monaco.languages.CompletionItemKind.Function,
-                insertText: "printf(${1:\"Hello, World!\"});",
-                insertTextRules:
-                  monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: "Print output in C",
-              },
-            ];
-            return { suggestions };
-          },
-        });
-      }
+  const handleRunCode = () => alert("Run button clicked!");
 
-      // Register completion provider for C++
-      if (codingLanguage === "cpp") {
-        monaco.languages.registerCompletionItemProvider("cpp", {
-          provideCompletionItems: () => {
-            const suggestions = [
-              {
-                label: "#include <iostream>",
-                kind: monaco.languages.CompletionItemKind.Keyword,
-                insertText: "#include <iostream>",
-                documentation: "Standard I/O library in C++",
-              },
-              {
-                label: "cout",
-                kind: monaco.languages.CompletionItemKind.Function,
-                insertText: "cout << ${1:\"Hello, World!\"} << endl;",
-                insertTextRules:
-                  monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: "Print output in C++",
-              },
-            ];
-            return { suggestions };
-          },
-        });
-      }
-
-      // Register completion provider for Java
-      if (codingLanguage === "java") {
-        monaco.languages.registerCompletionItemProvider("java", {
-          provideCompletionItems: () => {
-            const suggestions = [
-              {
-                label: "System.out.println",
-                kind: monaco.languages.CompletionItemKind.Function,
-                insertText: "System.out.println(${1:\"Hello, World!\"});",
-                insertTextRules:
-                  monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: "Print output in Java",
-              },
-              {
-                label: "Scanner",
-                kind: monaco.languages.CompletionItemKind.Function,
-                insertText: "Scanner scanner = new Scanner(System.in);",
-                insertTextRules:
-                  monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                documentation: "Create a Scanner object for input",
-              },
-            ];
-            return { suggestions };
-          },
-        });
-      }
-    };
-
-    // Register completion items for the selected language
-    registerCompletionItems();
-  };
-
-  // Handle the Run button click (optional logic can be added here)
-  const handleRunCode = () => {
-    alert("Run button clicked! You can add your logic here to run the code.");
-  };
-
-
-  const handleFileClick = async(fileId) => {
+  const handleFileClick = async (fileId) => {
     try {
-      // Make a POST request to your backend API endpoint with the fileId
-      const response = await axios.post('https://college-project-backend-rtiw.onrender.com/user/getCode', {
-        fileId: fileId,  // Send the fileId in the request body
+      const res = await axios.post('https://college-project-backend-rtiw.onrender.com/user/getCode', {
+        fileId
       }, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`
         }
-      }); // Include withCredentials if needed
-  
-      // Handle successful response
-      console.log('Code file fetched:', response.data);
-      console.log('Code file fetched:', response.data.codeFile.code);
-      setCode(response.data.codeFile.code); // Set the code in the editor
-      setcodingLanguage(response.data.codeFile.language); // Set the language in the dropdown
-      setFileName(response.data.codeFile.filename); // Set the filename in the state
-      return response.data; // You can return or use the data in your component as needed
-    } catch (error) {
-      // Handle error
-      console.error('Error fetching code file:', error.response?.data || error.message);
+      });
+      const file = res.data.codeFile;
+      setCode(file.code);
+      setcodingLanguage(file.language);
+      setFileName(file.filename);
+    } catch (err) {
+      console.error("Error fetching file:", err);
     }
   };
+
   return (
     <div className="outer-container">
       <div className="blank-container">
-
-          <div className="add-file">
-            <h2>Project Files</h2>
-            <button className="add-file-button" onClick={handleNewfile}> 
-              <img src= {Addfile} alt="Add File" />
-            </button>
-          </div>
-       
-        <div className="blank-header">
-         
-
-        {fileList.map((file) => (
-          <div className="file-structure"
-          tabIndex={0}
-          >
-          
-        <div className="item file" key={file._id}
-         onClick={() => handleFileClick(file._id)}
-         cursor="pointer"
-         style={{ cursor: "pointer" }} // Add this line to change the cursor to pointer
-        ><a>{file.filename}</a></div>
-       
-     
-       </div>
-        ))}
+        <div className="add-file">
+          <h2>Project Files</h2>
+          <button className="add-file-button" onClick={handleNewfile}>
+            <img src={Addfile} alt="Add File" />
+          </button>
         </div>
-        
-      
-    </div>
-
-
-      {/*Editor Container*/}
+        <div className="blank-header">
+          {fileList.map((file) => (
+            <div className="file-structure" tabIndex={0} key={file._id}>
+              <div
+                className="item file"
+                onClick={() => handleFileClick(file._id)}
+                style={{ cursor: "pointer" }}
+              >
+                <a>{file.filename}</a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
       <div className="editor-container">
         <div className="editor-header">
           <div className="editor-title">
-          <form>
-            <select
-              className="dropdown"
-              id="dropdown"
-              value={codingLanguage}
-              onChange={handleChange}
-            >
-              <option value="c">C</option>
-              <option value="cpp">C++</option>
-              <option value="java">Java</option>
-              <option value="javascript">JavaScript</option>
-            </select>
-
-            {/* Run Button */}
-            <button className="run-button" onClick={handleRunCode}>
-              Run
-            </button>
-
-            <button className="run-button" onClick={handlesaveCode}>
-              Save
-            </button>
-
-             <button className="run-button" onClick={handleshareCode}>
-              Share
-            </button>
-          </form>
+            <form>
+              <select className="dropdown run-button" value={codingLanguage} onChange={handleChange}>
+                <option value="c">C</option>
+                <option value="cpp">C++</option>
+                <option value="java">Java</option>
+                <option value="javascript">JavaScript</option>
+              </select>
+              <button className="run-button" onClick={handleRunCode}>Run</button>
+              <button className="run-button" onClick={handlesaveCode}>Save</button>
+              <button className="run-button" onClick={handleshareCode}>Share</button>
+            </form>
           </div>
           {ShareCodeOwner && <div>{ShareCodeOwner}</div>}
         </div>
-
         <div className="editor-box">
           <Editor
             height="100%"
@@ -429,21 +214,48 @@ const debounceTimeout = useRef(null);
               suggestOnTriggerCharacters: true,
               parameterHints: true,
               automaticLayout: true,
-              readOnly: false,
+              readOnly: false
             }}
-            onMount={handleEditorDidMount} // Attach the onMount callback
-            // onChange={(value) => setCode(value)} 
-            onChange={handleCodeChange  }
+            onMount={handleEditorDidMount}
+            onChange={handleCodeChange}
           />
         </div>
       </div>
 
       <div className="output-panel">
         <h2>Output</h2>
-        <pre>{output}</pre> {/* Display the output here */}
+        <pre>{output}</pre>
       </div>
-      </div>
-    );
+
+      <div className="chat-icon" onClick={() => setChatOpen(!chatOpen)}>💬</div>
+
+      {chatOpen && (
+        <div className="chat-box">
+          <div className="chat-header">Room Chat</div>
+          <div className="chat-messages">
+            {chatMessages.map((msg, idx) => (
+              <div
+                key={idx}
+                className={msg.user === "Me" ? "my-message" : "other-message"}
+              >
+                <strong>{msg.user}:</strong> {msg.message}
+              </div>
+            ))}
+          </div>
+          <div className="chat-input">
+            <input
+              type="text"
+              value={chatInput}
+              onChange={(e) => setChatInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+              placeholder="Type a message..."
+            />
+            <button onClick={sendMessage}>Send</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default CodeEditor;
