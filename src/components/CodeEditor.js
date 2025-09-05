@@ -25,6 +25,7 @@ const CodeEditor = () => {
   const { roomId } = useParams();
   const navigate = useNavigate();
   const debounceTimeout = useRef(null);
+  const [readOnly, setReadOnly] = useState(true);
 
   useEffect(() => {
     console.log("Joining room:", roomId);
@@ -121,6 +122,11 @@ const CodeEditor = () => {
     }
   };
 
+  const handleRequestEdit = () => {
+    setReadOnly(false);
+    alert("You can now edit the code.");
+  }
+
   const handlesaveCode = async (e) => {
     e.preventDefault();
     let finalFilename = fileName || prompt("Please enter a filename:");
@@ -197,6 +203,7 @@ const CodeEditor = () => {
               <button className="run-button" onClick={handleRunCode}>Run</button>
               <button className="run-button" onClick={handlesaveCode}>Save</button>
               <button className="run-button" onClick={handleshareCode}>Share</button>
+              {readOnly && <button className="run-button" onClick={handleRequestEdit}>Request edit</button> }
             </form>
           </div>
           {ShareCodeOwner && <div>{ShareCodeOwner}</div>}
@@ -214,7 +221,7 @@ const CodeEditor = () => {
               suggestOnTriggerCharacters: true,
               parameterHints: true,
               automaticLayout: true,
-              readOnly: false
+              readOnly:  readOnly 
             }}
             onMount={handleEditorDidMount}
             onChange={handleCodeChange}
