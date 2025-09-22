@@ -1,15 +1,25 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import Editor from "@monaco-editor/react";
-import io from "socket.io-client";
 import "./CodeEditor.css";
 import Addfile from "../Feature_img/add-file.png";
 import axios from 'axios';
 import { useParams, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { DataContext } from '../DataContext';
+import { socket } from '../library/socket';
 
 const CodeEditor = () => {
-  const socket = useRef(io("https://college-project-backend-rtiw.onrender.com")).current;
+  
+
+  const [fileListVisible, setFileListVisible] = useState(false);
+const [isMobile, setIsMobile] = useState(window.innerWidth <= 767);
+
+useEffect(() => {
+  const handleResize = () => setIsMobile(window.innerWidth <= 767);
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
+  
 
   const [ShareCodeOwner, setShareCodeOwner] = useState();
   const { user, islogin } = useContext(DataContext);
@@ -28,9 +38,10 @@ const CodeEditor = () => {
   const [readOnly, setReadOnly] = useState(true);
 
   useEffect(() => {
+    socket.connect();
     console.log("Joining room:", roomId);
     socket.emit("join-room", { roomId });
-    socket.emit("shareCode", { roomId, userId: user?._id, code });
+    // socket.emit("shareCode", { roomId, userId: user?._id, code });
 
     socket.on("message", (message) => console.log("Received message:", message));
     socket.on("codeRecive", (data) => {
@@ -54,6 +65,7 @@ const CodeEditor = () => {
       socket.off("codeRecive");
       socket.off("codeUpdate");
       socket.off("receiveMessage");
+      socket.disconnect();
     };
   }, [roomId]);
 
@@ -74,7 +86,7 @@ const CodeEditor = () => {
     if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
     debounceTimeout.current = setTimeout(() => {
       socket.emit("codeChange", { roomId, code: value, codingLanguage });
-    }, 500);
+    }, 1000);
   };
 
   const sendMessage = () => {
@@ -170,12 +182,12 @@ const CodeEditor = () => {
     <div className="outer-container">
       <div className="blank-container">
         <div className="add-file">
-          <h2>Project Files</h2>
+          <h2 onClick={() => setFileListVisible(!fileListVisible)} style={{cursor: "pointer"}}  >Project Files {isMobile ? (fileListVisible ? "▲" : "▼") : ""} </h2>
           <button className="add-file-button" onClick={handleNewfile}>
             <img src={Addfile} alt="Add File" />
           </button>
         </div>
-        <div className="blank-header">
+        <div className={`blank-header ${isMobile ? (fileListVisible ? "visible" : "hidden") : ""}`}>
           {fileList.map((file) => (
             <div className="file-structure" tabIndex={0} key={file._id}>
               <div
