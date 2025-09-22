@@ -250,7 +250,7 @@ useEffect(() => {
 
       {chatOpen && (
         <div className="chat-box">
-          <div className="chat-header">Room Chat</div>
+          <div className="chat-header"><div>Room Chat</div><div className="close-chat" onClick={() => setChatOpen(false)}>✖</div> </div>
           <div className="chat-messages">
             {chatMessages.map((msg, idx) => (
               <div
