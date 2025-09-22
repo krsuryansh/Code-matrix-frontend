@@ -87,6 +87,7 @@ body {
 }
 
 .signin-btn {
+  text-decoration: none;
   background-color: #007bff;
   color: white;
 }
@@ -223,4 +224,5 @@ body {
     padding: 12px;
     width: 100%;
   }
+  .user-button { margin-right: 5px; }
 }

@@ -69,7 +69,7 @@ const Navbar = () => {
         </div>
 
         {/* Auth Section (desktop) */}
-        <div className="auth-section desktop-only">
+        <div className="auth-section ">
           {islogin ? (
             <div className="user-profile-button">
               <button className="user-button" onClick={toggleDropdown}>User</button>
@@ -84,7 +84,7 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="auth-buttons">
-              <Link to="/Signup" className="auth-button register-btn">Register</Link>
+              {/* <Link to="/Signup" className="auth-button register-btn">Register</Link> */}
               <Link to="/Signup" className="auth-button signin-btn">Sign In</Link>
             </div>
           )}
@@ -100,24 +100,7 @@ const Navbar = () => {
             <Link to="/code" className="menu-link" onClick={closeMenu}>Start Code</Link>
             <a href="/#features" className="menu-link" onClick={closeMenu}>Features</a>
 
-            {islogin ? (
-              <div className="sidebar-dropdown">
-                <button className="menu-link" onClick={toggleDropdown}>User ▾</button>
-                {isDropdownOpen && (
-                  <div className="sidebar-dropdown-menu">
-                    <Link to="/Profile" className="dropdown-item" onClick={closeMenu}>Profile</Link>
-                    <Link to="/projects" className="dropdown-item" onClick={closeMenu}>Projects</Link>
-                    <Link to="/settings" className="dropdown-item" onClick={closeMenu}>Settings</Link>
-                    <button className="dropdown-item logout-btn" onClick={handleLogout}>Logout</button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="auth-buttons-mobile">
-                <Link to="/Signup" className="auth-button register-btn" onClick={closeMenu}>Register</Link>
-                <Link to="/Signup" className="auth-button signin-btn" onClick={closeMenu}>Sign In</Link>
-              </div>
-            )}
+          
           </div>
         </div>
       )}
