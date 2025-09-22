@@ -288,6 +288,8 @@ content: "📄 ";
 
 /* Chat Header */
 .chat-header {
+  justify-content: space-between;
+  display: flex;
   background-color: #dc5425;
   color: white;
   padding: 12px 15px;
